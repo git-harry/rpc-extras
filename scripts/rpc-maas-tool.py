@@ -44,12 +44,12 @@ class RpcMaas(object):
     """Class representing a connection to the MAAS Service"""
 
     def __init__(self, entity_match='', entities=None,
-                 config_file=DEFAULT_CONFIG_FILE):
+                 config_file=DEFAULT_CONFIG_FILE, username=None, api_key=None):
         self.entity_label_whitelist = entities
         self.entity_match = entity_match
         self.config_file = config_file
         self.driver = get_driver(Provider.RACKSPACE)
-        self._get_conn()
+        self._get_conn(username, api_key)
         self._get_overview()
         self._add_links()
         self._filter_entities()
@@ -70,15 +70,15 @@ class RpcMaas(object):
             raise Exception("No Entities found matching --entity or "
                             "--entitymatch")
 
-    def _get_conn(self):
+    def _get_conn(self, username=None, api_key=None):
         """Read config file and use extracted creds to connect to MAAS"""
         self.config = ConfigParser.RawConfigParser()
         self.config.read(self.config_file)
         self.conn = None
 
         try:
-            user = self.config.get('credentials', 'username')
-            api_key = self.config.get('credentials', 'api_key')
+            user = username or self.config.get('credentials', 'username')
+            api_key = api_key or self.config.get('credentials', 'api_key')
             self.conn = self.driver(user, api_key)
         except ConfigParser.NoOptionError:
             url = self.config.get('api', 'url')
@@ -211,7 +211,9 @@ class RpcMassCli(object):
         LOGGER.addHandler(logging.FileHandler(self.args.logfile))
         self.rpcm = RpcMaas(self.args.entitymatch,
                             self.args.entity,
-                            self.args.raxrcpath)
+                            self.args.raxrcpath,
+                            self.args.username,
+                            self.args.api_key)
         self.rpcmac = RpcMaasAgentConfig(self.args.agentconfdir)
 
     def parse_args(self):
@@ -274,6 +276,9 @@ class RpcMassCli(object):
                             help='A check that should not be present'
                                  'can be specified multiple times',
                             default=[])
+        parser.add_argument('--username', help='raxmon username.')
+        parser.add_argument('--api_key', help='raxmon API key.')
+
         self.args = parser.parse_args()
 
     def main(self):

@@ -9,6 +9,7 @@ export DEPLOY_HAPROXY=${DEPLOY_HAPROXY:-"no"}
 export DEPLOY_OA=${DEPLOY_OA:-"yes"}
 export DEPLOY_ELK=${DEPLOY_ELK:-"yes"}
 export DEPLOY_MAAS=${DEPLOY_MAAS:-"no"}
+export TEST_MAAS=${TEST_MAAS:-"no"}
 export DEPLOY_TEMPEST=${DEPLOY_TEMPEST:-"no"}
 export DEPLOY_CEILOMETER=${DEPLOY_CEILOMETER:-"no"}
 export DEPLOY_CEPH=${DEPLOY_CEPH:-"no"}
@@ -87,6 +88,13 @@ which openstack-ansible || ./scripts/bootstrap-ansible.sh
 # Apply any patched files.
 cd ${RPCD_DIR}/playbooks
 openstack-ansible -i "localhost," patcher.yml
+
+# Remove any existing MaaS checks/alarms
+if [[ "${DEPLOY_MAAS}" == "yes" && "${TEST_MAAS}" == "yes" ]]; then
+  pushd ${RPCD_DIR}/playbooks
+    run_ansible test-maas.yml --tags setup --skip-tags setup-fake-hp
+  popd
+fi
 
 # begin the openstack installation
 if [[ "${DEPLOY_OA}" == "yes" ]]; then
@@ -167,4 +175,11 @@ if [[ "${DEPLOY_ELK}" == "yes" ]]; then
   if [[ "${DEPLOY_HAPROXY}" == "yes" ]]; then
     run_ansible haproxy.yml
   fi
+fi
+
+# Test MaaS configuration
+if [[ "${DEPLOY_MAAS}" == "yes" && "${TEST_MAAS}" == "yes" ]]; then
+  pushd ${RPCD_DIR}/playbooks
+    run_ansible test-maas.yml --tags test
+  popd
 fi

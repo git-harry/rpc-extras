@@ -1,3 +1,5 @@
+futures
+pyyaml
 rackspace-monitoring
 requests
 tabulate
