@@ -13,10 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Install virtualenv package
+  pip:
+    name: virtualenv
+  tags:
+    - beaver-install
+    - beaver-pip-packages
+
 - name: Install pip packages
   pip:
     name: "{{ item }}"
     state: present
+    extra_args: "--no-index --find-links {{ openstack_repo_url }}/rpc-releases/{{ rpc_release }}-beaver/"
+    virtualenv: "/opt/venvs/beaver"
+    virtualenv_site_packages: yes
   register: install_pip_packages
   until: install_pip_packages|success
   retries: 5
