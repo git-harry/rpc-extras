@@ -25,7 +25,7 @@
 
 ## Working in the repository
 
-### filing a bug report
+### Filing an issue report
 
 When creating an issue, please ensure you include the following information
 
@@ -33,16 +33,62 @@ When creating an issue, please ensure you include the following information
 * Steps to reproduce
 * Any output or logs that you gathered from your environment
 
-### fixing a bug
+### Issue triage
+Regular triage meeting are held, their purpose is to provide a time where new issues can be prioritised and the next set of issues to fix can be identified. Each release will target a number of issues, that list will be compiled from the highest priority issues available. Where there are more issues of a particular priority than available spots on the list, the triage meeting provides a place to discuss which issues to select.
 
-1. A bug is filed or feature requested against ```rpc-openstack```
-2. After triage and prioritisation, the developer pushes a fix directly to a branch on ```rpc-openstack``` in the ```rcbops``` github namespace (rather than a developers own fork). A pull request is then made from this branch to the ```master``` branch.
-3. Unless a bug is specific to a release branch (e.g. ```liberty-12.1```), fixes are made to the ```master``` branch before any potential backports.
-4. Bugs meeting backport criteria are backported to the release branches (e.g. ```liberty-12.1```) as appropriate.
-5. github markdown is used to update the original issue with a checklist for tracking which branches have had fixes merged.
-6. Each time a PR is merged, the associated branch is deleted from ```rpc-openstack```.
-7. When all PRs are completed the issue is then closed.
+Each issue is given a priority and that priority is used to decide the order in which issues are worked. It is important to remember that there is a finite resource available to fix issues. The process of prioritisation is used to focus the available resources on the most important tasks identified. Prioritisation will never be perfect, there will always be competition for resources and there will always be issues addressed slower than an individual would like.
 
+|Priority      |Description                                                                                                                    |Examples                                                            |
+|--------------|-------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
+|prio-expedited|Any issue that causes a fundamental failure in the product, especially if there is no workaround or it affects all deployments.|Data loss, security bugs, deployment failures of core functionality.|
+|prio-1        |Fundamental failures where there is a workaround or only a subset of users are affected.                                       |Incorrect default configurations.                                   |
+|prio-2        |Bugs affecting non-standard configurations or that do not directly affect the customer experience or non-core features.        |Individual MaaS plugin failures.                                    |
+|prio-3        |Low impact bugs that are cosmetic or cause limited tangible effect.                                                            |Typographical errors.                                               |
+|prio-wishlist |Issues that are not bugs but feature request                                                                                   |Additional Logstash filters, MaaS plugin enhancement.               |
+|prio-undecided|There is insufficient information on which to determine a priority                                                             |Issues lacking steps to reproduce or logs.                          |
+
+
+If a 'prio-expedited' issue is identified between triage meetings that will be added to the list at the expense of a lesser priority issue.
+
+'prio-undecided' issues should be reviewed at every triage meeting based on any new information that has been provided.
+
+This description of the triage process is intended to allow flexibility, if you feel an new issue needs expediting or the priority of an issue has changed please feel free to raise it before the next triage meeting.
+
+### Working an issue
+#### Selecting an issue to work on
+Review the issues with the label 'status-approved'.
+
+Always work on issues with the highest available priority. If there are multiple issues of the same priority, use your judgement when selecting the most appropriate to work on.
+
+Once an issue is selected, assign yourself as the owner and change the status label from 'status-approved' to 'status-doing'.
+
+#### Fixing an issue
+##### Gathering information
+Issues may or may not contain sufficient information from which to construct a commit. If you require more information update the issue with what you require. In addition, if the issue was created internally, feel free to reach out to the relevant parties directly. GitHub should e-mail the issue creator however do not rely on this method if a lack of information is hindering a resolution.
+
+##### Create pull request
+If an issue affects multiple branches always start by creating a pull request for the newest branch, generally this means master. Once that has merged you should be okay to create pull requests for all other affected branches. This is done to prevent the need to review multiple pull requests for the same thing and reduce the chances that the branches will end up with different version of the same commit.
+
+Use the following branch naming scheme when fixing an issue:
+
+issues/issue_id/release_branch
+
+E.g. issues/1234/liberty-12.1
+
+The purpose of having a branch naming convention is to make it easier to correlate branches with their purpose when viewed on the project repo.
+
+When the commit is complete push the branch to rcbops/rpc-openstack
+
+git push upstream issues/issue_id/release_branch
+
+The purpose of pushing the branch directly to rcbops/rpc-openstack is that it allows anyone on the team to update the pull request. If you create a pull request from a branch on your own GitHub repo the only way someone else can modify it is to create a new pull request. Generally this should not be required however there can be times, such as when someone is on leave or an issue needs to be expedited, that it is necessary for someone else to adjust a commit.
+Once the branch has been pushed to rpc-openstack, create a pull request. Pull requests are not linked with issues beyond being able to reference one another, this means any required labels providing context to the issue, e.g. priority, need to be added to the pull request separately. Add the issue priority and set the target release label to be the issue target release label for the branch in question, for example if an issue has the labels r12.1.1, and r12.2.0 and the pull request is for the branch liberty-12.1, the label r12.1.1 should be set on the pull request. In addition add the label 'status-needs-review' to the pull request. If the pull request is a work in progress (WIP) make sure to add the label ‘status-dont-merge’.
+
+##### Backports
+As the issue owner you are responsible for back porting the commit. As each commit merges, the individual that merges the commit should delete the issue branch using the link on the pull request page and tick the issue checklist for the fixed branch.
+
+##### Closing the issue
+An issue should be closed by the individual that merges the commit that fixes that last branch listed as affected by the issue. As the issue owner you are ultimately responsible for it and should validate that all required work is complete if you are not the one to close the issue.
 
 ## Commits, pull requests and reviews
 
