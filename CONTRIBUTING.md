@@ -32,10 +32,15 @@
 #### Issues
 Issues are work items, they may be bugs or enhancements. They are managed using [Waffle](https://waffle.io/rcbops/u-suk-dev?source=rcbops%2Frpc-openstack) and stored in [GitHub](https://github.com/rcbops/rpc-openstack/issues). Issues that are logged in other places, for example on Launchpad for OSA, are not within scope unless they have been reported on this project by the creation of a new issue to track the upstream item.
 
+Each individual issue should be viewed as tracking all the step required to release one commit as part of the product. So, if an issue requires changes made in multiple pull requests to a single branch those changes should be broken out into separate issues however, if the commit requires backports they do form part of the same issue.
+
 #### Waffle board
 The [Waffle board](https://waffle.io/rcbops/u-suk-dev?source=rcbops%2Frpc-openstack) is a Kanban board consisting of a series of columns used to manage the progress of issues. This board is the only place to view or update the current work commitments.
 
-#### WIP (Work In Progress) limits
+#### WIP (Work In Progress)
+An issue is WIP when it is in one of the columns, on the board, between Backlog and Done. Put another way, the only times an issue does not count as WIP are if it is in Backlog or Done.
+
+#### WIP limits
 Each column on the board has a WIP limit that is used to control the amount of new work to which the engineering team commits. The WIP limits will be listed in the column titles on the Waffle board. No column can receive new work if it violates the WIP limit unless there is an explicit exception made for it as defined in the processes below.
 
 #### Swim lanes
