@@ -38,6 +38,9 @@ The [Waffle board](https://waffle.io/rcbops/u-suk-dev?source=rcbops%2Frpc-openst
 #### WIP (Work In Progress) limits
 Each column on the board has a WIP limit that is used to control the amount of new work to which the engineering team commits. The WIP limits will be listed in the column titles on the Waffle board. No column can receive new work if it violates the WIP limit unless there is an explicit exception made for it as defined in the processes below.
 
+#### Swim lanes
+Each swim lane represents a category of WIP, for example bugs or enhancements. The board is divided into swim lanes using labels.
+
 #### Stakeholders
 * reporter - the individual that created the issue.
 * owner(s) - the individual(s) assigned to manage the issue through to its closure.
@@ -76,6 +79,10 @@ Labels are used to categorise issues to aid with tracking and prioritisation.
 |Product feature          |feature-upgrades        |Upgrades-related work.                                                                                                                                        |                                                                                              |
 |Product feature          |feature-monitoring      |Monitoring-related work.                                                                                                                                      |                                                                                              |
 |Product feature          |feature-osa             |OSA-related work.                                                                                                                                             |                                                                                              |
+|Swim lane                |swimlane-rr             |Issues that form part of the WIP for revision (patch) releases.                                                                                               |                                                                                              |
+|Swim lane                |swimlane-enhancements   |Issues that form part of the WIP for major/minor releases.                                                                                                    |                                                                                              |
+|Swim lane                |swimlane-improvements   |Issues that form part of the WIP for infrastructure that supports releases.                                                                                   |Gating or this process documentation.                                                         |
+|Swim lane                |swimlane-misc           |Issues that form part of the WIP that cannot be categorised by one of the other swim lanes.                                                                   |Spikes.                                                                                       |
 
 ## Pre-Backlog -> Backlog
 ### Adding an issue to the backlog
@@ -133,14 +140,14 @@ Triage meetings are held on a weekly basis, with ad hoc meetings held as require
 * Allow the opportunity to discuss the classification of any open issue that has not already been discussed in the meeting, this should not be used as a chance to rehash old arguments but instead to highlight the case for issues where the circumstances have changed.
 
 ## Backlog -> Approved
-Approved is updated with tasks from Backlog if Approved is under its WIP limit. In general the next card to move to Approved will be decided based on priority and age, with the oldest card of the highest priority the next moved. Any new issues in Backlog must be triaged before moving new work to Approved.
+Approved is updated with tasks from Backlog if the relevant swim lane in Approved is under its WIP limit. In general the next card to move to Approved will be decided based on priority and age, with the oldest card of the highest priority the next moved. Any new issues in Backlog must be triaged before moving new work to Approved.
 
 ## Approved
 This column shows the work to which the engineering team has currently committed but not yet started.
 
 ## Approved -> Doing
 ### Selecting an issue to work on
-Working on a task means moving it from Approved to Doing, this operation is only allowed if it doesn't violate the Doing WIP limit. All available work is found on the Waffle board in Approved, the next task is always at the top. Assign yourself as the owner of the issue at the top and move it from the top of Approved to the bottom of Doing.
+Working on a task means moving it from Approved to Doing, this operation is only allowed if it doesn't violate the Doing WIP limit for the relevant swim lane. All available work is found on the Waffle board in Approved, the next task is always at the top. Assign yourself as the owner of the issue at the top and move it from the top of Approved to the bottom of Doing.
 
 If a task includes an existing pull request from someone outside the engineering team, they should not be assigned as the owner. All work must be owned by the engineering team, if someone on another team e.g. support has provided code then work with them to get it merged but ultimately it is the responsibility of the engineering team to manage the flow of work and ensure all aspects of a card are completed.
 
@@ -151,7 +158,7 @@ The issue description contains a list of the steps required to close an issue, t
 ##### New issues discovered while working an issue
 If a new bug or feature requirement is found while working on an assigned issue, that new work item should be logged as a separate issue in Backlog.
 
-If the new issue blocks the existing issue, you should assign yourself to the new issue and move it to Doing. The existing issue should be updated with all the work that has been done, the label 'status-blocked' added and a link to the blocking issue should be included in the issue description. In this situation the WIP limit can be exceeded. Similar to situations where the WIP limit prevents new work being started the team needs to work to reduce the WIP so that new tasks can be started.
+If the new issue blocks the existing issue, you should assign yourself to the new issue and move it to Doing - make sure to go through the normal labeling process so the issue is correctly classified and add the appropriate swim lane label. The existing issue should be updated with all the work that has been done, the label 'status-blocked' added and a link to the blocking issue should be included in the issue description. In this situation the WIP limit can be exceeded. Similar to situations where the WIP limit prevents new work being started the team needs to work to reduce the WIP so that new tasks can be started.
 
 If the new issue does not prevent the resolution of your current task it will be treated as any new issue.
 
@@ -162,7 +169,7 @@ To ensure that issues and pull request are correctly associated, reference the i
     Connected https://github.com/rcbops/rpc-openstack/issues/0
 
 ## Doing -> Needs review
-A card can only be moved from Doing to Needs-review if Needs-review is below its WIP limit. If that condition is met and you are ready for feedback on your pull request, move the card (this should be a connected pair of the issue and pull request) to the bottom of Needs-review.
+A card can only be moved from Doing to Needs-review if Needs-review is below its WIP limit for the relevant swim lane. If that condition is met and you are ready for feedback on your pull request, move the card (this should be a connected pair of the issue and pull request) to the bottom of Needs-review.
 
 ## Needs review
 Reviewers should always review the tasks in the order the are listed in Needs-review. If owners need to make changes to the pull request, for example base on feedback from reviewers, the task should remain in Needs-review while that is done. The reviewer merging the commit should delete the issue branch (using the link on the pull request page) and tick the issue checklist for the fixed branch.
