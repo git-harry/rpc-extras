@@ -66,11 +66,12 @@ Labels are used to categorise issues to aid with tracking and prioritisation.
 |Team affected            |impacts-onboarding       |Identifies issus that are suitable activities for new team members or individuals.                                                                            |                                                                                              |
 |Team affected            |impacts-training         |Identifies issues that affect the Training group.                                                                                                             |                                                                                              |
 |Team affected            |impacts-rpcr             |Identifies issues that affect the Rackspace-supported Red Hat OpenStack Platform team.                                                                        |                                                                                              |
-|Priority                 |prio-expedited           |Expedited issue, any issue that causes a fundamental failure in the product, especially if there is no workaround or it affects all deployments.              |Customers down, inoperable service, deployment failures of core functionality, blocked gating.|
-|Priority                 |prio-1                   |Priority 1 issues are fundamental failures where there is a workaround or only a subset of users are affected.                                                |Incorrect default configurations.                                                             |
-|Priority                 |prio-2                   |Priority 2 issues affect non-standard configurations or do not directly affect the customer experience or non-core features.                                  |Individual MaaS plugin failures.                                                              |
-|Priority                 |prio-3                   |Priority 3 issue are low impact, they are cosmetic or cause limited tangible impact.                                                                          |Typographical errors.                                                                         |
-|Priority                 |prio-undecided           |Unprioritised issue contain insufficient information on which to determine a priority.                                                                        |Issues that do not clearly describe what is broken or the impact it is having.                |
+|Expedited issues         |expedite                 |Any issue that has been deemed to be so critical to fix that it takes priority over all existing commitments.                                                 |                                                                                              |
+|Severity                 |severity-1               |Severity 1 issues causes a fundamental failure in the product, especially if there is no workaround or it affects all deployments.                            |Customers down, inoperable service, deployment failures of core functionality, data loss.     |
+|Severity                 |severity-2               |Severity 2 issues are fundamental failures where there is a workaround or only a subset of users are affected.                                                |Incorrect default configurations.                                                             |
+|Severity                 |severity-3               |Severity 3 issues affect non-standard configurations or do not directly affect the customer experience or non-core features.                                  |Individual MaaS plugin failures.                                                              |
+|Severity                 |severity-4               |Severity 4 issue are low impact, they are cosmetic or cause limited tangible impact.                                                                          |Typographical errors.                                                                         |
+|Severity                 |severity-undecided       |Any issue contain insufficient information on which to determine a severity.                                                                                  |Issues that do not clearly describe what is broken or the impact it is having.                |
 |Workflow status (Waffle) |status-approved          |An issue that has been moved into the column Approved.                                                                                                        |                                                                                              |
 |Workflow status (Waffle) |status-doing             |An issue that has been moved into the column Doing.                                                                                                           |                                                                                              |
 |Workflow status (Waffle) |status-needs-review      |An issue that has been moved into the column Needs-review.                                                                                                    |                                                                                              |
@@ -102,23 +103,21 @@ All issues that are are not approved to be worked are listed in Backlog, this in
 ### Issue triage
 Issue triage is an ongoing process that should happen whenever Approved needs updating with new tasks. The engineering team will triage new issues and monitor unprioritised issues so that new commitments are always targetting the most import work.
 
-Each issue is given a priority and that priority is used to help decide the order in which issues are worked. It is important to remember that there is a finite resource available to fix issues. The process of prioritisation is used to focus the available resources on the most important tasks identified.
+Each issue is given a severity and that severity is used to help decide the order in which issues are worked. It is important to remember that there is a finite resource available to fix issues. The process of classifying issues with labels is used to help focus the available resources on the most important tasks identified.
 
-Issues are labelled with a priority as defined in the [labels table](#Labels).
+Issues are labelled with a severity as defined in the [labels table](#Labels).
 
 #### Expedited issues
-Expedited issues are allowed to exceed the WIP limit on any column. These issues are critical to fix and must be prioritised above all other work. They are identified with the label 'prio-expedited'. Due to the negative impact expedited issues have on WIP it is important they are used appropriately.
+Expedited issues are allowed to exceed the WIP limit on any column. These issues are critical to fix and must be prioritised above all other work. They are identified with the label 'expedite'. Due to the negative impact expedited issues have on WIP it is important they are used appropriately.
 
 #### Enhancements
 Issues labeled as 'type-enhancement-large' or 'type-enhancement-medium' filter into planning for major and minor releases. Tracking of that work is done elsewhere and so these issues should be closed once their information has been transferred to the appropriate place.
-
-Issues labeled as 'type-enhancement-small' should also be given a priority, in general they should be labeled as 'prio-3' but a higher priority can be given if the enhancement helps to prevent customer downtime.
 
 #### Classifying issues
 Issues are categorised to simplify the process of identifying the highest priority issues and allow different types of work to be tracked. The steps taken to correctly label an issue are:
 * Label issue type
   * Assign the appropriate issue-type label.
-  * If the issue is determined to be 'type-undecided', also add the labels 'prio-undecided' and 'status-needs-information'. Add a comment detailing the required information.
+  * If the issue is determined to be 'type-undecided', also add the labels 'severity-undecided' and 'status-needs-information'. Add a comment detailing the required information.
   * If the issue is determined to be 'type-enhancement-large', the issue should be logged as an idea on the [product roadmap](https://trello.com/b/OdRe9RxX/rpc-engineering-roadmap) and closed here with a link to the roadmap card.
   * If the issue is determined to be 'type-enhancement-medium', the issue should be added to the [release-planning backlog](https://waffle.io/rcbops/u-suk-dev?source=rcbops%2Fu-suk-dev) and closed here with a link to the new card.
 * Identify the teams impacted by the issue
@@ -135,12 +134,12 @@ Issues are categorised to simplify the process of identifying the highest priori
   * If there is a pre-existing issue add the label 'status-duplicate' to this new one and close it with a comment linking to the pre-existing issue.
 * Determine if the issue is blocked by something
   * If the issue is blocked by some other activity add the label 'status-blocked' and add details of the blocker to the issue description.
-* Prioritise the issue if 'type-bug' or 'type-enhancement-small'
-  * If there is insufficient information from which to determine the priority add the labels 'prio-undecided' and 'status-needs-information'. Also add a comment detailing the missing information.
-  * Assign the appropriate priority label based on the definitions of each priority category, if the issue is labeled with 'type-enhancement-small' generally this will be 'prio-3'.
+* Assign a severity label to the issue if 'type-bug'
+  * If there is insufficient information from which to determine the severity add the labels 'severity-undecided' and 'status-needs-information'. Also add a comment detailing the missing information.
+  * Assign the appropriate severity label based on the definitions of each severity category.
 
 #### Triage meetings
-Triage meetings are held on a weekly basis, with ad hoc meetings held as required. Their main purpose is to review what has been achieved since the last meeting and provide an opportunity to discuss specific cards if there is concern about their current priority. The Waffle board is used to provide this information.
+Triage meetings are held on a weekly basis, with ad hoc meetings held as required. Their main purpose is to review what has been achieved since the last meeting and provide an opportunity to discuss current and future commitments. The Waffle board is used to provide this information.
 
 ##### Triage meeting tasks
 * Review tasks completed since the last meeting
@@ -148,7 +147,7 @@ Triage meetings are held on a weekly basis, with ad hoc meetings held as require
 * Allow the opportunity to discuss the classification of any open issue that has not already been discussed in the meeting, this should not be used as a chance to rehash old arguments but instead to highlight the case for issues where the circumstances have changed.
 
 ## Backlog -> Approved
-Approved is updated with tasks from Backlog if the relevant swim lane in Approved is under its minimum WIP limit. Any new issues in Backlog must be triaged before moving new work to Approved. In general, the next work to commit to should be based on the priorities of support unless there is an issue blocking the engineering team from meeting their responsibilities. If all things are equal the next card to move to Approved should be decided based on priority and age, with the oldest card of the highest priority the next moved.
+Approved is updated with tasks from Backlog if the relevant swim lane in Approved is under its minimum WIP limit. Any new issues in Backlog must be triaged before moving new work to Approved. In general, the next work to commit to should be based on the priorities of support unless there is an issue blocking the engineering team from meeting their responsibilities. If all things are equal the next card to move to Approved should be decided based on severity and age, with the oldest card of the highest severity the next moved.
 
 ## Approved
 This column shows the work to which the engineering team has currently committed but not yet started.
@@ -234,7 +233,7 @@ Any further questions about our github processes, contributor guidelines, or FAQ
 ## Commits, release notes and pull requests
 ### Fixing a bug
 
-1. After the bug is triaged and prioritised, make the required changes. New features, breaking changes and other patches of note must include a release note generated using the `reno tool`. Please see `Release Notes` for more information.
+1. After the bug is triaged and moved over the point of commitment, make the required changes. New features, breaking changes and other patches of note must include a release note generated using the `reno tool`. Please see `Release Notes` for more information.
 2. Push changes directly to a branch on ```rpc-openstack``` in the ```rcbops``` github namespace (rather than a developers own fork). A pull request is then made from this branch to the ```master``` branch.
 3. Unless a bug is specific to a release branch (e.g. ```liberty-12.1```), commit fixes to the ```master``` branch before any potential backports.
 4. Bugs meeting backport criteria are backported to the release branches (e.g. ```liberty-12.1```) as appropriate.
