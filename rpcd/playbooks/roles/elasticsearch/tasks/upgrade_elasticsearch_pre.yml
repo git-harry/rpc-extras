@@ -13,6 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Check current elasticsearch version
+  apt:
+
 - name: Add legacy apt repositories
   apt_repository:
     repo: "{{ item.repo }}"
@@ -29,8 +32,8 @@
 
 - name: Upgrade elasticsearch to stable 1.7.x version
   apt:
-    pkg: "{{ item }}"
-    state: latest
+    pkg: "{{ item }}={{ elasticsearch_reindex_version }}"
+    state: present
     update_cache: yes
     cache_valid_time: 600
     dpkg_options: "force-confold"
@@ -109,6 +112,7 @@
 
 - name: Drop log_test1 template
   shell: 'curl -sk -XDELETE {{ internal_lb_vip_address }}:{{ elasticsearch_http_port }}/_template/log_test1'
+  retries: 5
   tags:
     - logging-upgrade
     - elasticsearch-upgrade

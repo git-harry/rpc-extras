@@ -16,6 +16,7 @@
 - include: upgrade_elasticsearch_pre.yml
   when:
     - logging_upgrade | bool
+
 - include: elasticsearch_pre_install.yml
 - include: elasticsearch_install.yml
 - include: elasticsearch_post_install.yml
