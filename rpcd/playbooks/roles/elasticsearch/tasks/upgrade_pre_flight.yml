@@ -30,19 +30,7 @@
   shell: /opt/upgrade-pre-flight-checks.py
   delegate_to: "{{ groups['elasticsearch_all'][0] }}"
   register: pre_flight_status
-  ignore_errors: true
   tags:
     - logging-upgrade
     - elasticsearch-upgrade
     - es-pre-flight
-
-- name: Check for latest version
-  set_fact:
-    logging_upgrade: False
-  when:
-    - pre_flight_status.rc == '1'
-
-- name: Check for reindexing in progress
-  command: /bin/false
-  when:
-    - pre_flight_status.rc == '2'
