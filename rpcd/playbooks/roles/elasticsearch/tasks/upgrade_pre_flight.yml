@@ -29,7 +29,6 @@
 - name: Run Pre Flight Checks
   shell: /opt/upgrade-pre-flight-checks.py
   delegate_to: "{{ groups['elasticsearch_all'][0] }}"
-  register: pre_flight_status
   tags:
     - logging-upgrade
     - elasticsearch-upgrade
