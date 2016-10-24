@@ -25,7 +25,7 @@ es_version = es_pkg.installed.version
 if es_pkg.installed.version == '{{ elasticsearch_version }}':
     print("Latest version of elasticsearch installed. Skipping upgrade.")
     sys.exit(1)
-    elif es_pkg.installed.version == '{{ elasticsearch_reindex_version }}':
+elif es_pkg.installed.version == '{{ elasticsearch_reindex_version }}':
     print("Version {{ elasticsearch_reindex_version }} of elasticsearch \
            installed, it is likely that there is a reindexing in progress. \
            Aborting upgrade.")
