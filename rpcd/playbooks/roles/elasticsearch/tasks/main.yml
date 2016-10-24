@@ -20,6 +20,10 @@
   when:
     - logging_upgrade | bool
     - pre_flight_status.rc == 0
+- include: upgrade_elasticsearch_pre.yml
+  when:
+    - logging_upgrade | bool
+    - force_upgrade | bool
 - include: elasticsearch_pre_install.yml
 - include: elasticsearch_install.yml
 - include: elasticsearch_post_install.yml

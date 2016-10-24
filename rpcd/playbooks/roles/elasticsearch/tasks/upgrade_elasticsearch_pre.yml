@@ -29,7 +29,7 @@
 
 - name: Upgrade elasticsearch to stable 1.7.x version
   apt:
-    pkg: "{{ item }}={{ elasticsearch_reindex_version }}"
+    pkg: "{{ item }}"
     state: present
     update_cache: yes
     cache_valid_time: 600
@@ -38,7 +38,7 @@
   until: install_apt_packages|success
   retries: 5
   delay: 2
-  with_items: elasticsearch_apt_packages
+  with_items: elasticsearch_reindex_apt_packages
   tags:
     - logging-upgrade
     - elasticsearch-upgrade

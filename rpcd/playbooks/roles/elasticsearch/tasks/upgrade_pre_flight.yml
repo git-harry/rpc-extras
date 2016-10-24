@@ -40,3 +40,4 @@
   command: /bin/false
   when:
     - pre_flight_status.rc == 2
+    - force_upgrade == false
