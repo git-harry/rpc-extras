@@ -13,31 +13,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Install Pre Flight Checks
-  template:
-    src: upgrade-pre-flight-checks.py.j2
-    dest: /opt/upgrade-pre-flight-checks.py
-    owner: root
-    group: root
-    mode: 0755
+- name: "Get ElasticSearch APT package version"
+  command: "dpkg-query --show --showformat='${Version}' elasticsearch"
+  register: elasticsearch_installed_version
+
+- name: "Determine whether or not the pre-upgrade steps should be run"
+  set_fact:
+    migrate_data: "{{ elasticsearch_installed_version.stdout | version_compare('2.0', '<') }}"
+
+- name: "Check for reindexing plugin"
+  stat:
+    path: "/usr/share/elasticsearch/plugins/reindexing"
+  register: reindexing_plugin_path
+
+- name: Monitor reindexing process
+  shell: /opt/reindex-liberty.py --host "{{ hostvars[groups['elasticsearch_container'][0]]['container_address'] }}" --monitor --continuous
+  async: 259200
+  poll: 5
   delegate_to: "{{ groups['elasticsearch_all'][0] }}"
   tags:
-    - logging-upgrade
+   - logging-upgrade
     - elasticsearch-upgrade
-    - es-pre-flight
-
-- name: Run Pre Flight Checks
-  shell: /opt/upgrade-pre-flight-checks.py
-  delegate_to: "{{ groups['elasticsearch_all'][0] }}"
-  register: pre_flight_status
-  ignore_errors: true
-  tags:
-    - logging-upgrade
-    - elasticsearch-upgrade
-    - es-pre-flight
-
-- name: Check for reindexing in progress
-  command: /bin/false
+    - elasticsearch-reindex
   when:
-    - pre_flight_status.rc == 2
-    - force_upgrade == false
+    - migrate_data
+    - reindexing_plugin_path.stat.exists
