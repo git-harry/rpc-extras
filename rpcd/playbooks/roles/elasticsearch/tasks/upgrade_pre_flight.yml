@@ -19,7 +19,7 @@
 
 - name: "Determine whether or not the pre-upgrade steps should be run"
   set_fact:
-    migrate_data: "{{ elasticsearch_installed_version.stdout | version_compare('2.0', '<') }}"
+    migrate_data: "{{ elasticsearch_installed_version.stdout | version_compare('2.0', '<', strict=True) }}"
 
 - name: "Check for reindexing plugin"
   stat:
