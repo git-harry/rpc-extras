@@ -15,7 +15,7 @@
 
 - name: Install apt packages
   apt:
-    pkg: "{{ item }}={{ elasticsearch_version }}"
+    pkg: "{{ item }}"
     state: present
     update_cache: yes
     cache_valid_time: 600
