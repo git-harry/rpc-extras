@@ -19,7 +19,7 @@
   tasks:
     - name: Clone RPC-MaaS
       git:
-        repo: "https://github.com/rcbops/rpc-maas"
+        repo: "https://github.com/git-harry/rpc-maas"
         dest: "/opt/rpc-maas"
         version: "{{ maas_release }}"
     - name: Ensure openstack_deploy exists
