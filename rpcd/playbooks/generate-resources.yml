@@ -4,9 +4,16 @@
 - name: Add resource load to deployment
   hosts: utility_all[0]
   tasks:
+    - name: Check if instances already exist
+      shell: ". ~/openrc; nova list --fields name --limit 1"
+      register: instance_check
+    - name: Set if instances exist
+      set_fact:
+        existing_instances: "{{ 'test_server_' in instance_check.stdout }}"
     - name: Install virtualenv
       pip:
         name: "virtualenv"
+      when: not existing_instances
     - name: Prepare a virtualenv for generate_resources.py
       pip:
         name: "{{ item }}"
@@ -18,6 +25,7 @@
         - "python-openstacksdk==0.5.2"
         - "python-novaclient==9.0.0"
         - "os-client-config==1.28.0"
+      when: not existing_instances
     - name: Generate resources
       script: "../../scripts/generate_resources.py --servers {{ server_count }} --volumes {{ volume_count }} --networks {{ network_count }} --infinite-quotas --output-file /tmp/generated_resources.json"
       environment:
@@ -29,21 +37,16 @@
         OS_USER_DOMAIN_NAME: "Default"
         OS_PROJECT_DOMAIN_NAME: "Default"
         PATH: "{{ venv }}/bin"
+      when: not existing_instances
     - fetch:
         src: "/tmp/generated_resources.json"
-        dest: "/tmp/"
+        dest: "/etc/"
         flat: "yes"
+      when: not existing_instances
     - name: Remove virtualenv
       file:
         path: "{{ venv }}"
         state: "absent"
+      when: not existing_instances
   vars:
     venv: "/tmp/load_gen_venv"
-
-- name: Add instance monitoring script
-  hosts: hosts
-  tasks:
-    - name: Copy instance IP adddresses file to host
-      copy:
-        src: "/tmp/generated_resources.json"
-        dest: "/etc/"
