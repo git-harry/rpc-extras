@@ -5,7 +5,7 @@
   hosts: utility_all[0]
   tasks:
     - name: Check if instances already exist
-      shell: ". ~/openrc; nova list --fields name --limit 1"
+      shell: ". ~/openrc; nova list --fields name"
       register: instance_check
     - name: Set if instances exist
       set_fact:
