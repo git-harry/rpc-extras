@@ -38,6 +38,7 @@ collect_logs_cmd+=" $(dirname ${0})/collect_logs.yml"
 eval $collect_logs_cmd || true
 
 echo "#### END LOG COLLECTION ###"
+sleep 36000
 
 extract_rpc_release(){
   awk '/rpc_release/{print $2}' | tr -d '"'
